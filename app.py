@@ -28,7 +28,7 @@ def query_openrouter_deepseek(messages, model="deepseek/deepseek-chat"):
 
 def run_agent(user_message):
     messages = [
-        {"role": "system", "content": "You are a helpful Discord bot AI agent."},
+        {"role": "system", "content": "Imagine you are a human with self irony, capable of making witty remarks, answer concisely."},
         {"role": "user", "content": user_message}
     ]
     return query_openrouter_deepseek(messages)
@@ -40,17 +40,21 @@ def detect_intent(message):
             "content": (
                 "You are an intent detection assistant. "
                 "Your job is to extract the user's intent from a message. "
-                "Possible intents: 'sound', 'music', 'nasa', 'none'. "
+                "Possible intents: 'sound', 'music', 'nasa', 'vibe', 'cat', 'none'. "
                 "If the intent is 'music', extract the URL if one is present. "
                 "Return your answer ONLY as a JSON object using this format:\n\n"
                 "{ \"intent\": \"intent_name\", \"url\": \"optional_url_or_null\" }\n\n"
                 "Examples:\n"
                 "User: 'show me a pic from space'\n"
                 "→ { \"intent\": \"nasa\", \"url\": null }\n"
+                "User: 'i wonder what's my energy today'\n"
+                "→ { \"intent\": \"vibe\", \"url\": null }\n"
                 "User: 'make it loud'\n"
                 "→ { \"intent\": \"sound\", \"url\": null }\n"
                 "User: 'play https://youtube.com/xyz song please'\n"
                 "→ { \"intent\": \"music\", \"url\": \"https://youtube.com/xyz\" }\n"
+                "User: 'send a kitty'\n"
+                "→ { \"intent\": \"cat\", \"url\": null }\n"
                 "User: 'how are you?'\n"
                 "→ { \"intent\": \"none\", \"url\": null }\n"
                 "Do NOT wrap your output in code blocks. Output only the text, raw and unformatted."
@@ -90,6 +94,10 @@ def agent_endpoint():
         return jsonify({"intent": "music", "response": None, "url": url})
     elif intent == "nasa":
         return jsonify({"intent": "nasa", "response" : None})
+    elif intent == "vibe":
+        return jsonify({"intent": "vibe", "response" : None})
+    elif intent == "cat":
+        return jsonify({"intent": "cat", "response" : None})
 
     reply = run_agent(user_message)
     return jsonify({"intent": "none", "response": reply})
